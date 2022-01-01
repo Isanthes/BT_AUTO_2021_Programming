@@ -8,6 +8,15 @@ namespace BT_AUTO_2021_Programming
     {
         double side;
 
+        public Square(double side)
+        {
+            this.side = side;
+        }
+
+        public Square()
+        {
+
+        }
         public void SetSide(double side)
         {
            this.side = side;

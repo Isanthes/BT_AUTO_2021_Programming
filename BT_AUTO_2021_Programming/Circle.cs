@@ -9,6 +9,16 @@ namespace BT_AUTO_2021_Programming
         double radius;
         //const double PI = 3.1415;
 
+        public Circle(double radius)
+        {
+            this.radius = radius;
+        }
+
+        public Circle()
+        {
+            this.radius = 0;
+        }
+
         public void SetRadius(double radius)
         {
             this.radius = radius;
