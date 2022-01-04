@@ -9,7 +9,9 @@ namespace BT_AUTO_2021_Programming
             // Course01(args);
             // Course02(args);
             // Course03(args);
-            Course04();
+            // Course04();
+            // Course05();
+            Course06();
         }
 
         static void Course01(string [] args)
@@ -280,7 +282,6 @@ namespace BT_AUTO_2021_Programming
             Random rnd = new Random();
             GuessNumber(rnd.Next(1,1000));
         }
-
         static void Course04()
         {
             DrawFullShape(5, 3);
@@ -316,6 +317,63 @@ namespace BT_AUTO_2021_Programming
             r2.Assign(2, 5, 7);
             Console.WriteLine(r2.GetVolume());
         }
+        static void Course05()
+        {
+            DrawShapeOutline(5);
+            DrawShapeOutline(10, 5);
+            DrawFullShapeCorners(6);
+            DrawFullShape(7);
+
+            Circle c = new Circle(4);
+            c.Draw();
+            Triangle t1 = new Triangle(5, 7, 9);
+            t1.Draw();
+            Square s1 = new Square(5); 
+            Rectangle r1 = new Rectangle(2, 7);
+            Console.WriteLine(s1.GetArea());
+            Console.WriteLine(r1.GetArea());
+            Console.WriteLine(c.ToString());
+            Console.WriteLine(t1.ToString());
+            Console.WriteLine(r1.ToString());
+            Console.WriteLine(s1.ToString());
+
+            Teacher teacher1 = new Teacher("Programming", "UPB", 2000, "Gigel Programator", 'M');
+            teacher1.PrintTeacher();
+
+            Student student1 = new Student("An 1",true,true,"Andreea",'F');
+            student1.PrintStudent();
+
+
+
+        }
+
+        private static void Course06()
+        {
+            Car c1 = new Car(20, true, 90);
+            Car c2 = new Car(0, false, -90);
+            c1.Start();
+            c1.Accelerate();
+            c1.TurnLeft();
+            c1.TurnRight();
+            Console.WriteLine(Car.ConvertHpToKw(150));
+            c2.Start();
+            c2.GearUp();
+            c2.Accelerate(20);
+            c2.Steer(20);
+            c2.Accelerate(10);
+            c2.TurnLeft();
+            c2.GearUp();
+            c2.Accelerate();
+            c2.PrintCar();
+
+            c2.CarBrand = "Name";
+
+            Rectangle r1 = new Rectangle(3, 4);
+            r1.PrintRectangle();
+            r1.SetLength(-10);
+            r1.PrintRectangle();
+
+        }
 
         public static void DrawShapeOutline(int width, int height)
         {
@@ -343,6 +401,11 @@ namespace BT_AUTO_2021_Programming
             }
         }
 
+        public static void DrawShapeOutline(int l)
+        {
+            DrawShapeOutline(l, l);
+        }
+
         public static void DrawFullShapeCorners(int width, int height)
         {
             for (int j = 0; j < height; j++)
@@ -362,6 +425,11 @@ namespace BT_AUTO_2021_Programming
             }
         }
 
+        public static void DrawFullShapeCorners(int l) 
+        {
+            DrawFullShapeCorners(l, l);
+        }
+
         public static void DrawFullShape(int width, int height)
         {
             for (int j = 0; j < height; j++)
@@ -372,6 +440,11 @@ namespace BT_AUTO_2021_Programming
                 }
                 Console.WriteLine();
             }
+        }
+
+        public static void DrawFullShape(int l)
+        {
+            DrawFullShape(l, l);
         }
 
         public static void DrawFullShape2(int width, int height)
