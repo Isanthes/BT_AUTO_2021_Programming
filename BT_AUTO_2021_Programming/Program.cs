@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BT_AUTO_2021_Programming
 {
     class Program
     {
+        public enum Browsers
+        {
+            Chrome,
+            Edge,
+            Firefox
+        }
         static void Main(string[] args)
         {
             // Course01(args);
@@ -11,7 +18,9 @@ namespace BT_AUTO_2021_Programming
             // Course03(args);
             // Course04();
             // Course05();
-            Course06();
+            // Course06();
+            // Course07();
+            Course08();
         }
 
         static void Course01(string [] args)
@@ -347,6 +356,64 @@ namespace BT_AUTO_2021_Programming
 
         }
 
+        private static void Course07()
+        {
+            Square s1 = new Square();
+            Rectangle r1 = new Rectangle();
+            Shape sh1 = new Shape();
+
+            //polymorphism
+            IShape s2 = new Square(); 
+            IShape r2 = new Rectangle();
+            IShape sh2 = new Shape(); 
+
+            List<string> lista = new List<string>();
+            List<IShape> shapeList = new List<IShape>();
+            shapeList.Add(s2);
+            shapeList.Add(r2);
+            shapeList.Add(sh2);
+            shapeList.Add(s1);
+
+            s1.Draw();
+            s2.Draw();
+            s2.State();
+            ((AbstractShape)s2).DoSomething();
+
+            ((Square)s2).PrintSquare();
+
+            //ex of using polymorphism 
+            Shape sh3;
+            string type = "rectangle";
+            switch (type)
+            {
+                case "square":
+                    {
+                        sh3 = new Square();
+                        break;
+                    }
+                case "rectangle":
+                    {
+                        sh3 = new Rectangle();
+                        break;
+                    }
+                default:
+                    {
+                        sh3 = new Shape();
+                        break;
+                    }
+            }
+            sh3.Draw();
+            sh3.Erase();
+
+            IIntf ob1 = new MyParticularShape();
+            IClass ob2 = new MyParticularShape();
+            ob1.Print();
+            ob2.Print();
+
+            PartialClass pc = new PartialClass();
+            pc.Method1();
+            pc.Method2();
+        }
         private static void Course06()
         {
             Car c1 = new Car(20, true, 90);
@@ -372,6 +439,104 @@ namespace BT_AUTO_2021_Programming
             r1.PrintRectangle();
             r1.SetLength(-10);
             r1.PrintRectangle();
+
+        }
+
+        private static void Course08()
+        {
+            int[] intArray = new int[5] { 1, 2, 3, 4, 5 };
+
+            Shape s1 = new Shape();
+            Rectangle r1 = new Rectangle();
+            Shape[] shapes = new Shape[2] { s1, r1 };
+
+            foreach(int x in intArray)
+            {
+                Console.WriteLine(x);
+            }
+            for(int i = 0; i< intArray.Length; i++)
+            {
+                Console.WriteLine(intArray[i]);
+            }
+
+            List<string> myList = new List<string>();
+            myList.Add("Cristi");
+            myList.Add("Bianca");
+            myList.Add("Alin");
+
+            Console.WriteLine(myList.IndexOf("Cristi"));
+            Console.WriteLine(myList[0]);
+
+            foreach(string s in myList)
+            {
+                Console.WriteLine(s);
+            }
+            for(int i =0; i<myList.Count; i++)
+            {
+                Console.WriteLine(myList[i]);
+            }
+
+            String stringDemo = "ana are mere"; // a:3, n:1, r:2, e:3, m:1
+            Dictionary<char, int> characterFreq = new Dictionary<char, int>();
+            foreach(char c in stringDemo) // a,n,a, ,a,r,e, ,m,e,r,e
+            {
+                if (characterFreq.ContainsKey(c))
+                {
+                    characterFreq[c]=characterFreq[c] + 1;
+                }
+                else
+                {
+                    characterFreq.Add(c, 1);
+                }
+            }
+
+            foreach(char key in characterFreq.Keys)
+            {
+                Console.WriteLine("{0}:{1}", key,characterFreq[key]);
+            }
+            foreach (KeyValuePair<char,int> kvp in characterFreq)
+            {
+                Console.WriteLine("{0}:{1}", kvp.Key, kvp.Value);
+            }
+
+           // SortedList<int, string> listSorted = new SortedList<int, string>();
+            var listSorted = new SortedList<int, string>();
+            listSorted.Add(6, "abc");
+            listSorted.Add(10, "abcd");
+            listSorted.Add(1, "xyz");
+
+            foreach(int key in listSorted.Keys)
+            {
+                Console.WriteLine("{0}, {1}",key, listSorted[key]);
+            }
+
+            //HashSet<int> hs = new HashSet<int>(intArray);
+            var hs = new HashSet<int>(intArray);
+            hs.Add(1);
+            foreach (int i in hs)
+            {
+                Console.WriteLine(i);
+            }
+
+            var myQueue = new Queue<int>();
+            myQueue.Enqueue(2);
+            myQueue.Enqueue(3);
+            myQueue.Enqueue(100);
+            myQueue.Enqueue(1);
+            int value = myQueue.Dequeue();
+            Console.WriteLine("Queue elements: {0}", myQueue.Count);
+
+            var myStack = new Stack<int>();
+            myStack.Push(2);
+            myStack.Push(3);
+            myStack.Push(100);
+            myStack.Push(1);
+            int stackVal = myStack.Pop(); //return 1
+            Console.WriteLine("Stack elements: {0}", myStack.Count);
+
+            Console.WriteLine(Browsers.Firefox);
+
+            
 
         }
 
