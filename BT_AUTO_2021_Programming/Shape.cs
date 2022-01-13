@@ -4,13 +4,20 @@ using System.Text;
 
 namespace BT_AUTO_2021_Programming
 {
-    class Shape : AbstractShape
+    class Shape : AbstractShape, IDisposable
     {
         ConsoleColor color;
+        string test;
 
         public override void Color()
         {
             Console.WriteLine("Coloring the shape");
+        }
+
+        public void Dispose()
+        {
+            Console.WriteLine("Disposing object !!");
+            test = "";
         }
 
         public override void Draw()

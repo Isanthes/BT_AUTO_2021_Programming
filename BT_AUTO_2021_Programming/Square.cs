@@ -8,9 +8,11 @@ namespace BT_AUTO_2021_Programming
     {
         double side;
 
+        public double Side { get => side; set => side = value; }
+
         public Square(double side)
         {
-            this.side = side;
+            this.Side = side;
         }
 
         public Square()
@@ -19,22 +21,22 @@ namespace BT_AUTO_2021_Programming
         }
         public void SetSide(double side)
         {
-           this.side = side;
+           this.Side = side;
         }
 
         public override double GetArea() 
         {
-            return Math.Pow(side, 2);
+            return Math.Pow(Side, 2);
         }
 
         public void PrintSquare()
         {
-            Console.WriteLine("The square with side {0} has the area {1}", side, GetArea());
+            Console.WriteLine("The square with side {0} has the area {1}", Side, GetArea());
         }
 
         public override string ToString()
         {
-            return "This is a square with side " + side;
+            return "This is a square with side " + Side;
         }
 
         public override void Draw()

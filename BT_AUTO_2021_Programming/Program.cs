@@ -20,7 +20,73 @@ namespace BT_AUTO_2021_Programming
             // Course05();
             // Course06();
             // Course07();
-            Course08();
+            // Course08();
+            try
+            {
+                Course09(args);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+           
+        }
+
+        private static void RecursiveMethod()
+        {
+            RecursiveMethod();
+        }
+        private static void Course09(string[] args)
+        {
+            try
+            {
+                Console.WriteLine(args[1]);
+                int x = int.Parse(args[0]);
+                int z = 7 / x;
+            }
+            catch(IndexOutOfRangeException ex)
+            {
+                Console.WriteLine("Index out of bounds");
+            }
+            catch(FormatException ex)
+            {
+                Console.WriteLine("Failed to convert to int !!");
+            }
+            catch(DivideByZeroException ex)
+            {
+                Console.WriteLine("Cannot divide by 0");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Ooop there is an exception !!");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+            finally
+            {
+                Console.WriteLine("The finally block always executes !!");
+            }
+
+            Shape sh = new Shape();
+            try
+            {
+                sh.Draw();
+            }
+            finally
+            {
+                sh.Dispose();
+            } 
+
+            //this is equivalent to try/finally from above
+            using(Shape s2 = new Shape())
+            {
+                s2.Draw();
+            }
+            
+
+    
+            throw new BtException("End of the call");
+
         }
 
         static void Course01(string [] args)
@@ -281,7 +347,7 @@ namespace BT_AUTO_2021_Programming
             r1.PrintRectangle();
 
            
-        }
+        } 
         static void Course03(string [] args)
         {
             //ComputeConversion(args);
@@ -441,9 +507,15 @@ namespace BT_AUTO_2021_Programming
             r1.PrintRectangle();
 
         }
-
         private static void Course08()
-        {
+{
+            Person p = new Person ("Ionel", "Ionescu", "str. Fraternitatii nr.5", "Cluj-Napoca", "RO");
+            Employee e = new Employee("Makaduku", "Makao","-","Ananarivo","Madagascar", 1500);
+            PartTimeEmployee pe = new PartTimeEmployee("Andrei","Antonescu","str.Teilor nr.7","Iasi","RO",1000);
+            Person.PrintPersonStatic(p);
+            Employee.PrintPersonStatic(e);
+            Employee.PrintPersonStatic(pe);
+        
             int[] intArray = new int[5] { 1, 2, 3, 4, 5 };
 
             Shape s1 = new Shape();
@@ -460,11 +532,11 @@ namespace BT_AUTO_2021_Programming
             }
 
             List<string> myList = new List<string>();
-            myList.Add("Cristi");
+            myList.Add("Alex");
             myList.Add("Bianca");
-            myList.Add("Alin");
+            myList.Add("Andrei");
 
-            Console.WriteLine(myList.IndexOf("Cristi"));
+            Console.WriteLine(myList.IndexOf("Alex"));
             Console.WriteLine(myList[0]);
 
             foreach(string s in myList)
