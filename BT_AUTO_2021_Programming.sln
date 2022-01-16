@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BT_AUTO_2021_Programming", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit_Auto_2022", "NUnit_Auto_2022\NUnit_Auto_2022.csproj", "{870DC0B1-EE28-43FC-8F71-21C97FC93CF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnit_Auto_2022", "XUnit_Auto_2022\XUnit_Auto_2022.csproj", "{30076ABA-2239-4317-9739-E5426A1E47E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSTest_Auto_2022", "MSTest_Auto_2022\MSTest_Auto_2022.csproj", "{0CAB3AD5-D2BA-4896-BA66-EF3C218806EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{870DC0B1-EE28-43FC-8F71-21C97FC93CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{870DC0B1-EE28-43FC-8F71-21C97FC93CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{870DC0B1-EE28-43FC-8F71-21C97FC93CF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30076ABA-2239-4317-9739-E5426A1E47E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30076ABA-2239-4317-9739-E5426A1E47E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30076ABA-2239-4317-9739-E5426A1E47E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30076ABA-2239-4317-9739-E5426A1E47E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CAB3AD5-D2BA-4896-BA66-EF3C218806EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CAB3AD5-D2BA-4896-BA66-EF3C218806EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CAB3AD5-D2BA-4896-BA66-EF3C218806EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CAB3AD5-D2BA-4896-BA66-EF3C218806EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
