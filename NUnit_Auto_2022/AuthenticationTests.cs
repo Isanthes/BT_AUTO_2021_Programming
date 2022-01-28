@@ -3,6 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace NUnit_Auto_2022
             //options.AddExtension("C:\\Users\\Cristi\\Downloads\\extension_10_8_1_0.crx");
 
             //FIREFOX OPTIONS
-            
+
             var firefoxOptions = new FirefoxOptions();
             string[] optionList =
             {
@@ -69,13 +70,13 @@ namespace NUnit_Auto_2022
 
         }
 
-        [TestCase("dinosaur", "dinosaurpassword","", "")]
-        [TestCase("dinosaur", "","", "Password is required!")]
+        [TestCase("dinosaur", "dinosaurpassword", "", "")]
+        [TestCase("dinosaur", "", "", "Password is required!")]
         [TestCase("", "", "Username is required!", "Password is required!")]
         [TestCase("", "dinopass", "Username is required!", "")]
         public void Test01(string user, string pass, string userError, string passError)
         {
-            Console.WriteLine(url); 
+            Console.WriteLine(url);
             driver.Navigate().GoToUrl(url);
 
             var pageText = driver.FindElement(By.CssSelector("#root > div > div.content > div > div:nth-child(1) > div > div > h1 > small"));
@@ -125,7 +126,7 @@ namespace NUnit_Auto_2022
         [Test]
         public void Test03()
         {
-             
+
             string url = protocol + "://" + hostname + ":8081/lazy.html";
             driver.Navigate().GoToUrl(url);
 
@@ -142,7 +143,7 @@ namespace NUnit_Auto_2022
 
             var button2 = Utils.WaitForElement(driver, 15, By.Id("btn2"));
             button2.Click();
-            for(int i=0; i<100; i++)
+            for (int i = 0; i < 100; i++)
             {
                 button2.Click();
             }
@@ -208,6 +209,75 @@ namespace NUnit_Auto_2022
             alert.SendKeys("cristi");
             alert.Accept();
 
+        }
+
+        [Test]
+        public void Test08()
+        {
+            driver.Navigate().GoToUrl(url + "hover");
+
+            //var hoverButton = driver.FindElement(By.CssSelector("#root > div > div.content > div > div.container-table.text-center.container > div > button"));
+            var hoverButton = driver.FindElement(By.ClassName("btn-outline-info"));
+
+            Actions actions = new Actions(driver);
+            actions.MoveToElement(hoverButton).Build().Perform();
+
+
+            var catSelect = driver.FindElement(By.Id("Cat"));
+            catSelect.Click();
+
+            var resultText = driver.FindElement(By.Id("result")).Text;
+
+            Assert.AreEqual("You last clicked the Cat", resultText);
+
+            var allItems = driver.FindElements(By.ClassName("clickable"));
+            foreach (var item in allItems)
+            {
+                item.Click();
+                var text = item.Text;
+                var resultTxt = driver.FindElement(By.Id("result")).Text;
+                Assert.AreEqual(String.Format("You last clicked the {0}", text), resultTxt);
+            }
+
+        }
+
+        [Test]
+        public void Test09()
+        {
+            driver.Navigate().GoToUrl(url + "stale");
+
+            // threating a stale element: find the element before every interaction !!
+            for (int i=0; i<100; i++)
+            {
+                var button = driver.FindElement(By.Id("stale-button"));
+                button.Click();
+            }
+
+            Utils.ExecuteJsScript(driver, "return document.title");
+            Utils.ExecuteJsScript(driver, "alert('enter correct login credential to continue');");
+        }
+
+        [Test]
+        public void Test10()
+        {
+            driver.Navigate().GoToUrl(url);
+            //var body = driver.FindElement(By.TagName("body"));
+            //body.SendKeys(Keys.Control);
+            //body.SendKeys("t");
+            foreach(var handle in driver.WindowHandles)
+            {
+                driver.SwitchTo().Window(handle);
+                Console.WriteLine(handle);
+            }
+
+        }
+
+        [Test]
+        public void Test11()
+        {
+            driver.Navigate().GoToUrl("https://www.vexio.ro/info/despre-noi/contact/");
+            var iframe = driver.FindElement(By.TagName("iframe"));
+            driver.SwitchTo().Frame(iframe);
         }
 
         [TearDown]
