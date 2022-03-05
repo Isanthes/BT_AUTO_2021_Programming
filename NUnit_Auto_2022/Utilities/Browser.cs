@@ -10,14 +10,16 @@ namespace NUnit_Auto_2022.Utilities
 {
     public class Browser
     {
-        public static IWebDriver GetDriver(WebBrowsers browsersType)
+        // Return a driver, based on the enum WebBrowsers and set up the options baed on the cfg file
+        public static IWebDriver GetDriver(WebBrowsers browserType)
         {
-            switch (browsersType)
+            switch (browserType)
             {
+                // Instantiate a chrome driver
                 case WebBrowsers.Chrome:
                     {
                         var options = new ChromeOptions();
-                        
+                        // Options for the driver based on flags from FrameworkConstants
                         if (FrameworkConstants.startMaximized)
                         {
                             options.AddArgument("--start-maximized");
@@ -30,7 +32,8 @@ namespace NUnit_Auto_2022.Utilities
                         {
                             options.AddArgument("ignore-certificate-errors");
                         }
-
+                        options.AddArgument("no-sandbox");
+                        // Proxy definition
                         var proxy = new Proxy
                         {
                             HttpProxy = FrameworkConstants.browserProxy,
@@ -39,89 +42,96 @@ namespace NUnit_Auto_2022.Utilities
                         if (FrameworkConstants.useProxy)
                         {
                             options.Proxy = proxy;
-                        }                      
+                        }
+                        // Intiatiate chrome driver with options
                         return new ChromeDriver(options);
                     }
                 case WebBrowsers.Firefox:
                     {
+                        // Defining the firefox options based on the flags in the Framework constants
                         var firefoxOptions = new FirefoxOptions();
-                        List<string> optionList = new List<string>();                      
-                        if (FrameworkConstants.startHeadless) 
+                        List<string> optionList = new List<string>();
+                        if (FrameworkConstants.startHeadless)
                         {
-                            optionList.Add("--headless");                            
+                            optionList.Add("--headless");
                         }
                         if (FrameworkConstants.ignoreCertErr)
                         {
                             optionList.Add("--ignore-certificate-errors");
-                        }                     
-
+                        }
                         firefoxOptions.AddArguments(optionList);
                         FirefoxProfile fProfile = new FirefoxProfile();
 
-                        if(FrameworkConstants.startWithExtension)
+                        // Adding extension if the option is enabled in FrameworkCOnstants
+                        if (FrameworkConstants.startWithExtension)
                         {
-                            fProfile.AddExtension(FrameworkConstants.GetExtensionName(browsersType));
-                        }                     
+                            fProfile.AddExtension(FrameworkConstants.GetExtensionName(browserType));
+                        }
                         firefoxOptions.Profile = fProfile;
-
+                        // Instantiate Frefix driver with options
                         return new FirefoxDriver(firefoxOptions);
                     }
                 case WebBrowsers.Edge:
                     {
+                        // Adding edge options based on the flags in the FrameWorkConstants
                         var edgeOptions = new EdgeOptions();
-
                         if (FrameworkConstants.startMaximized)
                         {
                             edgeOptions.AddArgument("--start-maximized");
                         }
                         if (FrameworkConstants.startHeadless)
                         {
-                            edgeOptions.AddArgument("--headless");
+                            edgeOptions.AddArgument("headless");
                         }
                         if (FrameworkConstants.startWithExtension)
                         {
-                            edgeOptions.AddExtension(FrameworkConstants.GetExtensionName(browsersType));
+                            edgeOptions.AddExtension(FrameworkConstants.GetExtensionName(browserType));
                         }
-                        //edgeOptions.AddArgument("headless");
+                        // Instatiate Edge driver with options defined
                         return new EdgeDriver(edgeOptions);
                     }
                 default:
                     {
-                        throw new BrowserTypeException(browsersType.ToString());
+                        // If the driver specified is not implemented
+                        throw new BrowserTypeException(browserType.ToString());
                     }
+
             }
         }
 
+
+        // This method will provide a driver, based on the config file browser attribute
         public static IWebDriver GetDriver()
         {
-            WebBrowsers cfgBrowsers;
+            WebBrowsers cfgBrowser;
             switch (FrameworkConstants.configBrowser.ToUpper())
             {
                 case "FIREFOX":
                     {
-                        cfgBrowsers = WebBrowsers.Firefox;
+                        cfgBrowser = WebBrowsers.Firefox;
                         break;
                     }
                 case "CHROME":
                     {
-                        cfgBrowsers = WebBrowsers.Chrome;
+                        cfgBrowser = WebBrowsers.Chrome;
                         break;
                     }
                 case "EDGE":
                     {
-                        cfgBrowsers = WebBrowsers.Edge;
+                        cfgBrowser = WebBrowsers.Edge;
                         break;
                     }
                 default:
                     {
                         throw new BrowserTypeException(String.Format("Browser {0} not supported", FrameworkConstants.configBrowser));
-                    }        
-                
+                    }
             }
-                return GetDriver(cfgBrowsers); 
+
+            return GetDriver(cfgBrowser);
         }
     }
 
+    // Browser Enum with the suported browser types
     public enum WebBrowsers
     {
         Chrome,

@@ -20,7 +20,7 @@ namespace NUnit_Auto_2022.Utilities
         public static bool ignoreCertErr = Boolean.Parse(configData["ignorecerterr"]);
         public static bool startWithExtension = Boolean.Parse(configData["extension"]);
         public static string configBrowser = configData["browser"];
-
+        public static string decryptedCon = Utils.Decrypt(Utils.JsonRead<DataModels.DbConnString>("appsettings.json").ConnectionStrings.DefaultConnection, "btauto2022");
 
         public static string GetUrl()
         {
@@ -35,13 +35,10 @@ namespace NUnit_Auto_2022.Utilities
                     {
                         return String.Format("{0}\\metamask-10.8.1-an+fx.xpi", extensionPath);
                     }
-                
                 default:
                     {
-                        return String.Format("{0}\\extension_10_8_1_0.crx", extensionPath);
+                        return String.Format("{0}\\extension_4_42_0_0.crx", extensionPath);
                     }
-
-
             }
         }
 
@@ -71,6 +68,5 @@ namespace NUnit_Auto_2022.Utilities
             Console.WriteLine("No env variable, reading from file");
             return Boolean.Parse(configData["headless"]);
         }
-
     }
 }

@@ -1,9 +1,16 @@
-﻿using OpenQA.Selenium;
+﻿using AventStack.ExtentReports;
+using Microsoft.VisualBasic.FileIO;
+using NPOI.XSSF.UserModel;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace NUnit_Auto_2022
 {
@@ -36,6 +43,14 @@ namespace NUnit_Auto_2022
             }
         }
 
+
+        /// <summary>
+        /// The method creates a screenshot based on the current date and saves it into a folder defined by the tester
+        /// </summary>
+        /// <param name="driver"> The WebDriver instance / browser from which the screenshot will be taken</param>
+        /// <param name="path"> The path where the screenshot will be saved </param>
+        /// <param name="fileName"> The base file name that will have appended the date to have unique files</param>
+        /// <param name="format"> Specify the image file format, example: JPG</param>
         public static void TakesScreeshotWithDate(IWebDriver driver, string path, string fileName, ScreenshotImageFormat format)
         {
             DirectoryInfo validation = new DirectoryInfo(path);
@@ -53,6 +68,12 @@ namespace NUnit_Auto_2022
             ((ITakesScreenshot)driver).GetScreenshot().SaveAsFile(finalFilePath, format);
         }
 
+        public static MediaEntityModelProvider CaptureScreenShot(IWebDriver driver, string name)
+        {
+            var screenShot = ((ITakesScreenshot)driver).GetScreenshot().AsBase64EncodedString;
+            return MediaEntityBuilder.CreateScreenCaptureFromBase64String(screenShot, name).Build();
+        }
+
         public static void ExecuteJsScript(IWebDriver driver, string script)
         {
             var jsExecutor = (IJavaScriptExecutor)driver;
@@ -61,8 +82,13 @@ namespace NUnit_Auto_2022
             {
                 Console.WriteLine(result.ToString());
             }
-        }    
+        }
 
+        /// <summary>
+        /// Converts a config file that has lines like key=value into a Dictionary with key and value
+        /// </summary>
+        /// <param name="configFilePath"> The path of the config file</param>
+        /// <returns>A dictionary with a key value pair of type string and string representing the lines in the config file</returns>
         public static Dictionary<string,string> ReadConfig(string configFilePath)
         {
             var configData = new Dictionary<string, string>();
@@ -73,6 +99,156 @@ namespace NUnit_Auto_2022
             }
             return configData;
         }
+
+        public static string[][] GetGenericData(string path)
+        {
+            var lines = File.ReadAllLines(path).Select(a => a.Split(',')).Skip(1);
+            return lines.ToArray();
+        }
+
+        public static DataTable GetDataTableFromCsv(string csv)
+        {
+            DataTable dataTable = new DataTable();
+            try
+            {
+                using (TextFieldParser csvReader = new TextFieldParser(csv))
+                {
+                    csvReader.SetDelimiters(new string[] { "," });
+                    csvReader.HasFieldsEnclosedInQuotes = true;
+                    string[] columnNames = csvReader.ReadFields();
+                    foreach (string column in columnNames)
+                    {
+                        DataColumn dataColumn = new DataColumn();
+                        dataColumn.AllowDBNull = true;
+                        dataTable.Columns.Add(dataColumn);
+                    }
+                    while (!csvReader.EndOfData)
+                    {
+                        string[] rowValues = csvReader.ReadFields();
+
+                        // this for loop can be skipped, it is used for sanitisation purposes
+                        for (int i = 0; i < rowValues.Length; i++)
+                        {
+                            if (rowValues[i] == "")
+                            {
+                                rowValues[i] = null;
+                            }
+                        }
+
+                        dataTable.Rows.Add(rowValues);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(String.Format("Could not read from csv file {0}", csv));
+            }
+            return dataTable;
+        }
+
+        public static DataTable GetDataTableFromExcel(string excelPath)
+        {
+            DataTable dataTable = new DataTable();
+            XSSFWorkbook wb;
+            XSSFSheet sh;
+            string sheetName;
+            using(var fs = new FileStream(excelPath, FileMode.Open, FileAccess.Read))
+            {
+                wb = new XSSFWorkbook(fs);
+                sheetName = wb.GetSheetAt(0).SheetName;
+            }
+            dataTable.Columns.Clear();
+            dataTable.Rows.Clear();
+
+            sh =(XSSFSheet) wb.GetSheet(sheetName);
+            int i = 0;
+            while(sh.GetRow(i) != null)
+            {
+                if (dataTable.Columns.Count < sh.GetRow(i).Cells.Count)
+                {
+                    for(int j=0; j<sh.GetRow(i).Cells.Count; j++)
+                    {
+                        dataTable.Columns.Add("", typeof(string));
+                    }            
+                }
+                dataTable.Rows.Add();
+                for(int j =0; j<sh.GetRow(i).Cells.Count; j++)
+                {
+                    var cell = sh.GetRow(i).GetCell(j);
+                    if (cell != null)
+                    {
+                        switch (cell.CellType)
+                        {
+                            case NPOI.SS.UserModel.CellType.Numeric:
+                                {
+                                    dataTable.Rows[i][j] = sh.GetRow(i).GetCell(j).NumericCellValue;
+                                    break;
+                                }
+                            case NPOI.SS.UserModel.CellType.String:
+                                {
+                                    dataTable.Rows[i][j] = sh.GetRow(i).GetCell(j).StringCellValue;
+                                    break;
+                                }
+                            default: // if the cell type is not numeric or string
+                                {
+                                    dataTable.Rows[i][j] = "";
+                                    break;
+                                }
+                        }
+                    } 
+                }
+                i++;
+            }
+            return dataTable;
+        }
+        public static T JsonRead<T>(string jsonFile)
+        {
+            string text = File.ReadAllText(jsonFile);
+            return JsonSerializer.Deserialize<T>(text);
+        }
+        public static List<string> GetAllFilesInFolderExt(string path, string extension)
+        {
+            List<string> files = new List<string>();
+            DirectoryInfo di = new DirectoryInfo(path);
+            foreach (FileInfo fi in di.GetFiles(extension, System.IO.SearchOption.TopDirectoryOnly))
+            {
+                files.Add(fi.FullName);
+            }
+            return files;
+        }
+
+        public static string Encrypt(string source, string key)
+        {
+            using (TripleDESCryptoServiceProvider tripleDESCryptoService = new TripleDESCryptoServiceProvider())
+            {
+                using (MD5CryptoServiceProvider hashMD5Provider = new MD5CryptoServiceProvider())
+                {
+                    byte[] byteHash = hashMD5Provider.ComputeHash(Encoding.UTF8.GetBytes(key));
+                    tripleDESCryptoService.Key = byteHash;
+                    tripleDESCryptoService.Mode = CipherMode.ECB;
+                    byte[] data = Encoding.UTF8.GetBytes(source);
+                    return Convert.ToBase64String(tripleDESCryptoService.CreateEncryptor().TransformFinalBlock(data, 0, data.Length));
+                }
+            }
+        }
+
+        public static string Decrypt(string encrypt, string key)
+        {
+            using (TripleDESCryptoServiceProvider tripleDESCryptoService = new TripleDESCryptoServiceProvider())
+            {
+                using (MD5CryptoServiceProvider hashMD5Provider = new MD5CryptoServiceProvider())
+                {
+                    byte[] byteHash = hashMD5Provider.ComputeHash(Encoding.UTF8.GetBytes(key));
+                    tripleDESCryptoService.Key = byteHash;
+                    tripleDESCryptoService.Mode = CipherMode.ECB;
+                    byte[] data = Convert.FromBase64String(encrypt);
+                    return Encoding.UTF8.GetString(tripleDESCryptoService.CreateDecryptor().TransformFinalBlock(data, 0, data.Length));
+                }
+            }
+        }
     }
-}
+ }
+
+
+
  
