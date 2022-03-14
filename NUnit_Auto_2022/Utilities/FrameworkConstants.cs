@@ -8,6 +8,7 @@ namespace NUnit_Auto_2022.Utilities
     {
         const string extensionPath = "Other\\ExtensionFile";
 
+        static DataModels.ConnString keys = Utils.JsonRead<DataModels.ConnString>("appsettings.json");
         static Dictionary<string, string> configData = Utils.ReadConfig("config.properties");
         static string protocol = configData["protocol"];
         static string hostname = configData["hostname"];
@@ -20,7 +21,19 @@ namespace NUnit_Auto_2022.Utilities
         public static bool ignoreCertErr = Boolean.Parse(configData["ignorecerterr"]);
         public static bool startWithExtension = Boolean.Parse(configData["extension"]);
         public static string configBrowser = configData["browser"];
-        public static string decryptedCon = Utils.Decrypt(Utils.JsonRead<DataModels.DbConnString>("appsettings.json").ConnectionStrings.DefaultConnection, "btauto2022");
+        public static string decryptedCon = Utils.Decrypt(keys.ConnectionStrings.DefaultConnection, "btauto2022");
+
+        static Dictionary<string, string> apiConfigData = Utils.ReadConfig("apiconfig.properties");
+        static string apiprotocol = apiConfigData["protocol"];
+        static string apihostname = apiConfigData["apihost"];
+        static string directionsApi = apiConfigData["directionsapi"];
+        static string apiKey = Utils.Decrypt(keys.ApiKey, "btauto2022");
+        //static string apiKey = apiConfigData["apikey"];
+
+        public static string GetApiUrl()
+        {
+            return String.Format("{0}://{1}{2}?key={3}", apiprotocol, apihostname, directionsApi, apiKey);
+        }
 
         public static string GetUrl()
         {
